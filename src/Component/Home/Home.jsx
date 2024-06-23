@@ -4,6 +4,7 @@ import { HomeLeft } from "./HomeComponent/HomeLeft";
 import { EmailVerifiedPage } from "./HomeComponent/EmailVerifiedPage";
 import { HomeRight } from "./HomeComponent/HomeRight";
 
+
 export const Home = () => {
   const auth = getAuth();
   const [userInfo, setuserInfo] = useState({
@@ -27,7 +28,7 @@ export const Home = () => {
       <div>
         {userInfo.EmailVerified ? (
           <div className="flex justify-between p-5 ">
-            <HomeLeft active={"FaHome"} />
+            <HomeLeft />
             <HomeRight />
           </div>
         ) : (

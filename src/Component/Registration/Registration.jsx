@@ -5,12 +5,15 @@ import registrationImg from "../../assets/registration.png";
 import { getAuth, 
   createUserWithEmailAndPassword,
   sendEmailVerification ,
-  updateProfile
+  updateProfile,
+  onAuthStateChanged
  } from "firebase/auth";
+import { getDatabase, ref, set, push } from "firebase/database";
 import { ToastContainer, toast ,Bounce } from 'react-toastify';
 import { Link ,Navigate, useNavigate } from "react-router-dom";
 export const Registration = () => {
   const auth = getAuth();
+  const db = getDatabase();
   const navigate = useNavigate ();
   const [loading, setLoading] = useState(false);
   const [Email, setEmail] = useState("");
@@ -95,14 +98,27 @@ export const Registration = () => {
           transition: Bounce,
           });
           updateProfile(auth.currentUser, {
-            displayName: "Jane Q. User", photoURL: "https://example.com/jane-q-user/profile.jpg"
+            displayName: FullName, 
+            photoURL: "https://example.com/jane-q-user/profile.jpg"
           }).then(() => {
-            console.log("profile update done");
+            onAuthStateChanged(auth, (userInfo) =>
+          {
+            let dbRef = ref(db, 'users/');
+            set(push(dbRef), {
+              username: auth.currentUser.displayName,
+              email: auth.currentUser.email,
+            }).then(()=>{
+              console.log("data upload done on real time database");
+            }).catch((error)=>{
+              console.log(error, "data is not uploaded");
+            })
+          })
+          }).catch((error)=>{
+            console.log(error, "error data uploading");
           })
           setTimeout(() => {
             navigate("/login");
-          }, 3000);
-          
+          }, 3000);         
           sendEmailVerification(auth.currentUser)
           .then(() => {
             console.log("check the email");
