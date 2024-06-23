@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { FaRegEye, FaEyeSlash } from "react-icons/fa";
 import registrationImg from "../../assets/registration.png";
+
 import { getAuth, 
   createUserWithEmailAndPassword,
-  sendEmailVerification 
+  sendEmailVerification ,
+  updateProfile
  } from "firebase/auth";
 import { ToastContainer, toast ,Bounce } from 'react-toastify';
 import { Link ,Navigate, useNavigate } from "react-router-dom";
@@ -92,6 +94,11 @@ export const Registration = () => {
           theme: "colored",
           transition: Bounce,
           });
+          updateProfile(auth.currentUser, {
+            displayName: "Jane Q. User", photoURL: "https://example.com/jane-q-user/profile.jpg"
+          }).then(() => {
+            console.log("profile update done");
+          })
           setTimeout(() => {
             navigate("/login");
           }, 3000);
